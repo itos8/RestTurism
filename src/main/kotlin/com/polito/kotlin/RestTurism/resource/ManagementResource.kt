@@ -1,17 +1,17 @@
 package com.polito.kotlin.RestTurism.resource
 
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import com.polito.kotlin.RestTurism.Place
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/rest/management")
 class ManagementResource {
 
-    /*@PostMapping("/newPlace")
-    fun newPlace(@RequestParam(value = "point") point: )
+    @PostMapping("/newPlace")
+    fun newPlace(@RequestParam(value = "mail") mail: String,
+                 @RequestParam(value = "pass") pass: String,
+                 @RequestBody(required = true) place: Place)
     {
 
-    }*/
+    }
 }

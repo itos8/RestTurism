@@ -6,19 +6,23 @@ import javax.mail.internet.AddressException
 import javax.mail.internet.InternetAddress
 
 //Funzione di registrazione di un nuovo utente
-fun newUser(user: User) : Responces
+fun newUser(user: User)
 {
-    try {
-        val mail = InternetAddress(user.mail)
-        mail.validate()
-    }
-    catch (ae: AddressException) {
-        return Responces.DataNotValid
-    }
+    val mail = InternetAddress(user.mail)
+    mail.validate()
+
     if (mongoReg(user))
-        return Responces.Done
+        return
     else
-        return Responces.UserNotRegistered
+        throw UserAlreadyRegisteredException("User already registered")
+}
+
+fun logUser(user: User)
+{
+    if (mongoLog(user))
+        return
+    else
+        throw UserNotFoundException("User not registered")
 }
 
 fun matchPoints (lat : Double, lon: Double): List<PointOfInterest>

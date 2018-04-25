@@ -38,6 +38,24 @@ fun mongoReg(user: User): Boolean
     }
 }
 
+//Login di un utente registrato
+fun mongoLog(user: User) : Boolean
+{
+    try {
+        val log = col.find(eq("mail", user.mail)).first()
+        if ( log != null )
+        {
+            return log.pass == user.pass
+        }
+        else
+            return false
+    }
+    catch (iae: IllegalArgumentException)
+    {
+        return false
+    }
+}
+
 fun mongoPos(point: Point): List<Place>
 {
     var list = mutableListOf<Place>()

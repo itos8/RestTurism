@@ -4,6 +4,8 @@ import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 import com.mongodb.client.model.geojson.Point
 import com.mongodb.client.model.geojson.Polygon
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.ResponseStatus
 
 enum class Responces
 {
@@ -11,6 +13,11 @@ enum class Responces
     UserNotRegistered,
     Done
 }
+@ResponseStatus(HttpStatus.CONFLICT)
+class UserAlreadyRegisteredException(override var message:String) : Exception(message)
+
+@ResponseStatus(HttpStatus.UNAUTHORIZED)
+class UserNotFoundException(override var message:String) : Exception(message)
 
 data class PointOfInterest(val lat: Double, val lon: Double, val name: String, val description: String)
 
