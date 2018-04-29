@@ -4,7 +4,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class RestTurismApplication
+open class RestTurismApplication
 
 fun main(args: Array<String>) {
     mongoCodec()
