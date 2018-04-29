@@ -25,6 +25,7 @@ class UserResource {
         return matchPoints(lat, lon)
     }
 
+    @CrossOrigin ( origins = ["http://localhost:63342"])
     @GetMapping("/login")
     fun login(@RequestParam(value = "mail") mail:String,
               @RequestParam(value = "pass") pass:String) =

@@ -7,12 +7,6 @@ import com.mongodb.client.model.geojson.Polygon
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.ResponseStatus
 
-enum class Responces
-{
-    DataNotValid,
-    UserNotRegistered,
-    Done
-}
 @ResponseStatus(HttpStatus.CONFLICT)
 class UserAlreadyRegisteredException(override var message:String) : Exception(message)
 
@@ -61,13 +55,18 @@ class Place //(val coordinates: Point, val name: String, val description: String
     @Expose
     var area: Polygon? = null
 
+    @SerializedName("manager")
+    @Expose
+    var manager: String? = null
+
     constructor() {}
 
-    constructor(coordinates: Point, name: String, description: String, area: Polygon)
+    constructor(coordinates: Point, name: String, description: String, area: Polygon, manager: String)
     {
         this.coordinates = coordinates
         this.name = name
         this.description = description
         this.area = area
+        this.manager = manager
     }
 }
