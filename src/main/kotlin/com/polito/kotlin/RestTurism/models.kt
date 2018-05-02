@@ -18,9 +18,6 @@ class UserNotFoundException(override var message:String) : Exception(message)
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class NoImageFoundException(override var message:String) : Exception(message)
 
-@ResponseBody
-data class image(val jpeg : ByteArrayOutputStream)
-
 data class PointOfInterest(val lat: Double, val lon: Double, val name: String, val description: String)
 
 class User {
@@ -67,14 +64,19 @@ class Place //(val coordinates: Point, val name: String, val description: String
     @Expose
     var manager: String? = null
 
+    @SerializedName("image")
+    @Expose
+    var image: String? = null
+
     constructor() {}
 
-    constructor(coordinates: Point, name: String, description: String, area: Polygon, manager: String)
+    constructor(coordinates: Point, name: String, description: String, area: Polygon, manager: String, image: String)
     {
         this.coordinates = coordinates
         this.name = name
         this.description = description
         this.area = area
         this.manager = manager
+        this.image = image
     }
 }
