@@ -3,6 +3,9 @@ package com.polito.kotlin.RestTurism.resource
 import org.springframework.web.bind.annotation.*
 import com.polito.kotlin.RestTurism.*
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 @RestController
 @RequestMapping("/rest/users")
@@ -30,4 +33,14 @@ class UserResource {
     fun login(@RequestParam(value = "mail") mail:String,
               @RequestParam(value = "pass") pass:String) =
             logUser(User(mail, "", pass))
+
+    @CrossOrigin (origins = ["*"])
+    @GetMapping("/images", produces = arrayOf(MediaType.IMAGE_JPEG_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE))
+    fun returnImage(@RequestParam(value = "mail") mail:String,
+                    @RequestParam(value = "pass") pass:String,
+                    @RequestParam(value = "image") image:String) : ByteArray
+    {
+        logUser(User(mail, "", pass))
+        return imageBack(image).readBytes()
+    }
 }

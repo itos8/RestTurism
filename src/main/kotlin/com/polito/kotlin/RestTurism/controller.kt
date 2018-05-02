@@ -2,6 +2,10 @@ package com.polito.kotlin.RestTurism
 
 import com.mongodb.client.model.geojson.Point
 import com.mongodb.client.model.geojson.Position
+import org.apache.tomcat.util.http.fileupload.IOUtils
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.ResponseStatus
+import java.io.*
 import javax.mail.internet.InternetAddress
 
 //Funzione di registrazione di un nuovo utente
@@ -68,4 +72,19 @@ fun matchPoints (lat : Double, lon: Double): List<PointOfInterest>
         }
     }
     return list
+}
+
+fun imageBack(name:String) : ByteArrayInputStream
+{
+    try {
+        val bytes = File("./images/$name").readBytes()
+        val stream = bytes.inputStream()
+        //val outStream = ByteArrayOutputStream()
+        //IOUtils.copy(stream, outStream)
+        return stream
+    }
+    catch (fnfe: FileNotFoundException)
+    {
+        throw NoImageFoundException("No Image Found")
+    }
 }

@@ -5,13 +5,21 @@ import com.google.gson.annotations.SerializedName
 import com.mongodb.client.model.geojson.Point
 import com.mongodb.client.model.geojson.Polygon
 import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.ResponseStatus
+import java.io.ByteArrayOutputStream
 
 @ResponseStatus(HttpStatus.CONFLICT)
 class UserAlreadyRegisteredException(override var message:String) : Exception(message)
 
 @ResponseStatus(HttpStatus.UNAUTHORIZED)
 class UserNotFoundException(override var message:String) : Exception(message)
+
+@ResponseStatus(HttpStatus.NOT_FOUND)
+class NoImageFoundException(override var message:String) : Exception(message)
+
+@ResponseBody
+data class image(val jpeg : ByteArrayOutputStream)
 
 data class PointOfInterest(val lat: Double, val lon: Double, val name: String, val description: String)
 
