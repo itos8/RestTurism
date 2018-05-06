@@ -2,6 +2,7 @@ package com.polito.kotlin.RestTurism
 
 import com.mongodb.MongoClient
 import com.mongodb.client.model.Filters.*
+import com.mongodb.client.model.geojson.LineString
 import com.mongodb.client.model.geojson.Point
 import org.bson.codecs.pojo.PojoCodecProvider
 
@@ -113,6 +114,22 @@ fun mongoMan(manager:String): List<Place>
 
     try {
         list.addAll(places.find(eq("manager", manager)))
+
+        return list
+    }
+    catch (e: NullPointerException)
+    {
+        return listOf()
+    }
+}
+
+fun mongoRoad(line: LineString) : List<Place>
+{
+    var list = mutableListOf<Place>()
+
+    try {
+
+        list.addAll(places.find(geoIntersects("area", line)))
 
         return list
     }

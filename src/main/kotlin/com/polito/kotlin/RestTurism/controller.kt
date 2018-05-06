@@ -2,9 +2,7 @@ package com.polito.kotlin.RestTurism
 
 import com.mongodb.client.model.geojson.Point
 import com.mongodb.client.model.geojson.Position
-import org.apache.tomcat.util.http.fileupload.IOUtils
-import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation.ResponseStatus
+import com.mongodb.client.model.geojson.LineString
 import java.io.*
 import javax.mail.internet.InternetAddress
 
@@ -39,14 +37,17 @@ fun logUser(user: User)
         throw UserNotFoundException("User not registered")
 }
 
-fun logManager(user: User) : List<String>
+fun logManager(user: User) : List<PointOfInterest>
 {
     if (mongoLogManager(user))
     {
-        val list = mutableListOf<String>()
+        val list = mutableListOf<PointOfInterest>()
         for (place : Place in mongoMan(user.mail!!))
         {
-            list.add(place.name!!);
+            list.add(PointOfInterest(place.coordinates!!.position.values.get(0),
+                                     place.coordinates!!.position.values.get(1),
+                                     place.name!!,
+                                     place.description!!));
         }
         return list
     }
@@ -87,4 +88,24 @@ fun imageBack(name:String) : ByteArrayInputStream
     {
         throw NoImageFoundException("No Image Found")
     }
+}
+
+fun matchLine(sLat: Double, sLon: Double, fLat: Double, fLon: Double): List<PointOfInterest>
+{
+    var list = mutableListOf<PointOfInterest>()
+    var line = listOf<Position>(Position(sLat,sLon), Position(fLat,fLon))
+    for (place: Place in mongoRoad(LineString(line)))
+    {
+        try {
+            list.add(PointOfInterest(place.coordinates!!.coordinates.values[0],
+                    place.coordinates!!.coordinates.values[1],
+                    place.name!!,
+                    place.description!!))
+        }
+        catch (npe: NullPointerException)
+        {
+            continue
+        }
+    }
+    return list
 }
