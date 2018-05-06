@@ -47,7 +47,8 @@ fun logManager(user: User) : List<PointOfInterest>
             list.add(PointOfInterest(place.coordinates!!.position.values.get(0),
                                      place.coordinates!!.position.values.get(1),
                                      place.name!!,
-                                     place.description!!));
+                                     place.description!!,
+                                     place.image!!))
         }
         return list
     }
@@ -65,7 +66,8 @@ fun matchPoints (lat : Double, lon: Double): List<PointOfInterest>
             list.add(PointOfInterest(place.coordinates!!.coordinates.values[0],
                                      place.coordinates!!.coordinates.values[1],
                                      place.name!!,
-                                     place.description!!))
+                                     place.description!!,
+                                     place.image!!))
         }
         catch (npe: NullPointerException)
         {
@@ -80,8 +82,6 @@ fun imageBack(name:String) : ByteArrayInputStream
     try {
         val bytes = File("./images/$name").readBytes()
         val stream = bytes.inputStream()
-        //val outStream = ByteArrayOutputStream()
-        //IOUtils.copy(stream, outStream)
         return stream
     }
     catch (fnfe: FileNotFoundException)
@@ -100,7 +100,8 @@ fun matchLine(sLat: Double, sLon: Double, fLat: Double, fLon: Double): List<Poin
             list.add(PointOfInterest(place.coordinates!!.coordinates.values[0],
                     place.coordinates!!.coordinates.values[1],
                     place.name!!,
-                    place.description!!))
+                    place.description!!,
+                    place.image!!))
         }
         catch (npe: NullPointerException)
         {

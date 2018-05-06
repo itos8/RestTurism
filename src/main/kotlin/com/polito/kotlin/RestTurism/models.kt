@@ -18,7 +18,7 @@ class UserNotFoundException(override var message:String) : Exception(message)
 @ResponseStatus(HttpStatus.NOT_FOUND)
 class NoImageFoundException(override var message:String) : Exception(message)
 
-data class PointOfInterest(val lat: Double, val lon: Double, val name: String, val description: String)
+data class PointOfInterest(val lat: Double, val lon: Double, val name: String, val description: String, val image: String)
 
 class User {
 

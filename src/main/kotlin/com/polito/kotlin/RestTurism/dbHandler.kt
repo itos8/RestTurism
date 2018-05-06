@@ -8,6 +8,7 @@ import org.bson.codecs.pojo.PojoCodecProvider
 
 import org.bson.codecs.configuration.CodecRegistries.fromProviders
 import org.bson.codecs.configuration.CodecRegistries.fromRegistries
+import java.security.MessageDigest
 
 private  val mon = MongoClient("localhost",27017)
 private val db = mon.getDatabase("Cicero")
@@ -33,6 +34,8 @@ fun mongoReg(user: User): Boolean
         }
         else
         {
+            val digest = MessageDigest.getInstance("SHA-256")
+            user.pass = digest.digest(user.pass!!.toByteArray()).contentToString()
             col.insertOne(user)
             return true
         }
@@ -49,6 +52,8 @@ fun mongoRegManager(user: User): Boolean
         }
         else
         {
+            val digest = MessageDigest.getInstance("SHA-256")
+            user.pass = digest.digest(user.pass!!.toByteArray()).contentToString()
             manager.insertOne(user)
             return true
         }
@@ -62,6 +67,8 @@ fun mongoLog(user: User) : Boolean
 {
     try {
         val log = col.find(eq("mail", user.mail)).first()
+        val digest = MessageDigest.getInstance("SHA-256")
+        user.pass = digest.digest(user.pass!!.toByteArray()).contentToString()
         if ( log != null )
         {
             return log.pass == user.pass
@@ -79,6 +86,8 @@ fun mongoLogManager(user: User) : Boolean
 {
     try {
         val log = manager.find(eq("mail", user.mail)).first()
+        val digest = MessageDigest.getInstance("SHA-256")
+        user.pass = digest.digest(user.pass!!.toByteArray()).contentToString()
         if ( log != null )
         {
             return log.pass == user.pass
