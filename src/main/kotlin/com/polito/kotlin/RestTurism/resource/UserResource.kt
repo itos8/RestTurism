@@ -12,6 +12,7 @@ import javax.jws.soap.SOAPBinding
 @RequestMapping("/rest/users")
 class UserResource {
 
+    @CrossOrigin ( origins = ["*"])
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     fun register(@RequestParam(value = "mail") mail: String,
@@ -19,6 +20,7 @@ class UserResource {
                  @RequestParam(value = "pass") pass: String) =
             newUser(User(mail,name,pass))
 
+    @CrossOrigin ( origins = ["*"])
     @GetMapping("/points")
     fun sendListPoints(@RequestParam(value = "latitude") lat: Double,
                        @RequestParam(value = "longitude") lon: Double,
@@ -29,7 +31,7 @@ class UserResource {
         return matchPoints(lat, lon)
     }
 
-    @CrossOrigin ( origins = ["http://localhost:63342"])
+    @CrossOrigin ( origins = ["*"])
     @GetMapping("/login")
     fun login(@RequestParam(value = "mail") mail:String,
               @RequestParam(value = "pass") pass:String) =
