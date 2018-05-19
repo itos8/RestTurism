@@ -38,18 +38,14 @@ fun logUser(user: User)
         throw UserNotFoundException("User not registered")
 }
 
-fun logManager(user: User) : List<PointOfInterest>
+fun logManager(user: User) : List<com.polito.kotlin.RestTurism.Point>
 {
     if (mongoLogManager(user))
     {
-        val list = mutableListOf<PointOfInterest>()
+        val list = mutableListOf<com.polito.kotlin.RestTurism.Point>()
         for (place : Place in mongoMan(user.mail!!))
         {
-            list.add(PointOfInterest(place.coordinates!!.position.values.get(0),
-                                     place.coordinates!!.position.values.get(1),
-                                     place.name!!,
-                                     place.description!!,
-                                     place.image!!))
+            list.add(makePoint(place))
         }
         return list
     }
@@ -112,18 +108,33 @@ fun matchLine(sLat: Double, sLon: Double, fLat: Double, fLon: Double): List<Poin
     return list
 }
 
-fun addPlace(mail:String, poi: PointOfInterest): PointOfInterest
+fun addPlace(mail:String, poi: PointOfInterest): com.polito.kotlin.RestTurism.Point
 {
-    var polygon = Polygon(listOf(Position(poi.lat, poi.lon),
-                                 Position(poi.lat + 0.002, poi.lon),
-                                 Position(poi.lat + 0.002, poi.lon+ 0.002),
-                                 Position(poi.lat, poi.lon+ 0.002),
-                                 Position(poi.lat, poi.lon)))
+    var polygon = Polygon(listOf(Position(poi.lat+0.001, poi.lon+0.001),
+                                 Position(poi.lat+0.001, poi.lon-0.001),
+                                 Position(poi.lat-0.001, poi.lon-0.001),
+                                 Position(poi.lat-0.001, poi.lon+0.001),
+                                 Position(poi.lat+0.001, poi.lon+0.001)))
     val place = Place(Point(Position(poi.lat, poi.lon)), poi.name, poi.description, polygon, mail, poi.image)
 
+    val point = makePoint(place)
 
     if (mongoNewPlace(place))
-        return poi
+        return point
     else
         throw InternalError()
+}
+
+fun makePoint(place: Place) : com.polito.kotlin.RestTurism.Point
+{
+    val area =  mutableListOf<com.polito.kotlin.RestTurism.Position>()
+
+    for (pos : Position in place.area!!.coordinates.exterior.toTypedArray())
+        area.add(com.polito.kotlin.RestTurism.Position(pos.values[0],pos.values[1]))
+
+    return com.polito.kotlin.RestTurism.Point(com.polito.kotlin.RestTurism.Position(place.coordinates!!.position.values.get(0),place.coordinates!!.position.values.get(1)),
+            place.name!!,
+            place.description!!,
+            area.toTypedArray(),
+            place.image!!)
 }

@@ -19,6 +19,8 @@ class UserNotFoundException(override var message:String) : Exception(message)
 class NoImageFoundException(override var message:String) : Exception(message)
 
 data class PointOfInterest(val lat: Double, val lon: Double, val name: String, val description: String, val image: String)
+data class Point(val position: Position, val name: String, val description: String, val polygon: Array<Position>, val image: String)
+data class Position (val lat: Double, val lon: Double)
 
 class User {
 

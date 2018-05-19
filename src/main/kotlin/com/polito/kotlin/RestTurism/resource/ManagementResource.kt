@@ -15,7 +15,7 @@ class ManagementResource {
     @ResponseStatus(HttpStatus.CREATED)
     fun newPlace(@RequestParam(value = "mail") mail: String,
                  @RequestParam(value = "pass") pass: String,
-                 @RequestBody(required = true) place: PointOfInterest) : PointOfInterest
+                 @RequestBody(required = true) place: PointOfInterest) : Point
             {
                 logManager(User(mail, "", pass))
                 return addPlace(mail, place)
