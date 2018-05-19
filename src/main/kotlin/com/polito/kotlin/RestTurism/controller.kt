@@ -3,6 +3,7 @@ package com.polito.kotlin.RestTurism
 import com.mongodb.client.model.geojson.Point
 import com.mongodb.client.model.geojson.Position
 import com.mongodb.client.model.geojson.LineString
+import com.mongodb.client.model.geojson.Polygon
 import java.io.*
 import javax.mail.internet.InternetAddress
 
@@ -109,4 +110,20 @@ fun matchLine(sLat: Double, sLon: Double, fLat: Double, fLon: Double): List<Poin
         }
     }
     return list
+}
+
+fun addPlace(mail:String, poi: PointOfInterest): PointOfInterest
+{
+    var polygon = Polygon(listOf(Position(poi.lat, poi.lon),
+                                 Position(poi.lat + 0.002, poi.lon),
+                                 Position(poi.lat + 0.002, poi.lon+ 0.002),
+                                 Position(poi.lat, poi.lon+ 0.002),
+                                 Position(poi.lat, poi.lon)))
+    val place = Place(Point(Position(poi.lat, poi.lon)), poi.name, poi.description, polygon, mail, poi.image)
+
+
+    if (mongoNewPlace(place))
+        return poi
+    else
+        throw InternalError()
 }

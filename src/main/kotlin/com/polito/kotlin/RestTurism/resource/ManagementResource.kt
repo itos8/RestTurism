@@ -2,6 +2,8 @@ package com.polito.kotlin.RestTurism.resource
 
 import com.polito.kotlin.RestTurism.Place
 import com.polito.kotlin.RestTurism.*
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -9,11 +11,15 @@ import org.springframework.web.bind.annotation.*
 class ManagementResource {
 
     @CrossOrigin ( origins = ["*"])
-    @PostMapping("/newPlace")
+    @PostMapping("/newPlace", consumes = [MediaType.APPLICATION_JSON_VALUE])
+    @ResponseStatus(HttpStatus.CREATED)
     fun newPlace(@RequestParam(value = "mail") mail: String,
-                 @RequestParam(value = "pass") pass: String) =
-                 //@RequestBody(required = true) place: Place)
-            logUser(User(mail, "", pass))
+                 @RequestParam(value = "pass") pass: String,
+                 @RequestBody(required = true) place: PointOfInterest) : PointOfInterest
+            {
+                logManager(User(mail, "", pass))
+                return addPlace(mail, place)
+            }
 
     @CrossOrigin ( origins = ["*"])
     @GetMapping ("/login")
@@ -23,6 +29,7 @@ class ManagementResource {
 
     @CrossOrigin (origins = ["*"])
     @PostMapping ("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     fun register(@RequestParam(value = "mail") mail: String,
                  @RequestParam(value = "name") name: String,
                  @RequestParam(value = "pass") pass: String) =

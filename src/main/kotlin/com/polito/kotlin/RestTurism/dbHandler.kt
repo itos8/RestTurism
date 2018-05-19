@@ -147,3 +147,19 @@ fun mongoRoad(line: LineString) : List<Place>
         return listOf()
     }
 }
+
+fun mongoNewPlace (place: Place) : Boolean
+{
+    try {
+        if (places.find(and(eq("coordinates", place.coordinates), eq("name", place.name))).count() > 0) {
+            return false
+        }
+        else
+        {
+            places.insertOne(place)
+            return true
+        }
+    } catch (iae: Exception){
+        return false
+    }
+}
