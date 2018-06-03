@@ -40,7 +40,6 @@ class ManagementResource {
     @ResponseStatus(HttpStatus.CREATED)
     fun newImage(@RequestParam(value = "mail") mail: String,
                  @RequestParam(value = "pass") pass: String,
-                 @RequestParam(value = "nameImage") nameImage: String,
                  @RequestBody(required = true) image: ByteArray) =
-            imageSave(nameImage, image)
+            imageSave(image)
 }

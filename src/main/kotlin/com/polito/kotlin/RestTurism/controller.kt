@@ -5,8 +5,13 @@ import com.mongodb.client.model.geojson.Position
 import com.mongodb.client.model.geojson.LineString
 import com.mongodb.client.model.geojson.Polygon
 import java.io.*
+import java.nio.charset.Charset
 import java.nio.file.Paths
+import java.util.*
 import javax.mail.internet.InternetAddress
+import java.util.Random
+
+
 
 //Funzione di registrazione di un nuovo utente
 fun newUser(user: User)
@@ -149,10 +154,23 @@ fun makePoint(place: Place) : com.polito.kotlin.RestTurism.Point
             place.image!!)
 }
 
-fun imageSave(name: String, image: ByteArray)
+fun imageSave(image: ByteArray) : String
 {
-    var path = Paths.get(name)
-    var file = FileOutputStream(File("./images/${path.fileName}"))
+    val generatedString = generateRandom("ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890")
+
+    var file = FileOutputStream(File("./images/$generatedString.jpg"))
 
     file.write(image)
+
+    return generatedString+".jpg"
+}
+
+private fun generateRandom(aToZ: String): String {
+    val rand = Random()
+    val res = StringBuilder()
+    for (i in 0..8) {
+        val randIndex = rand.nextInt(aToZ.length)
+        res.append(aToZ[randIndex])
+    }
+    return res.toString()
 }
