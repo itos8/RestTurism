@@ -5,11 +5,13 @@ import com.mongodb.client.model.geojson.Position
 import com.mongodb.client.model.geojson.LineString
 import com.mongodb.client.model.geojson.Polygon
 import java.io.*
+import java.nio.file.Paths
 import javax.mail.internet.InternetAddress
 
 //Funzione di registrazione di un nuovo utente
 fun newUser(user: User)
 {
+    println("Registered user: ${user.mail}")
     val mail = InternetAddress(user.mail)
     mail.validate()
 
@@ -21,6 +23,7 @@ fun newUser(user: User)
 
 fun newManager(user: User)
 {
+    println("Registered manager: ${user.mail}")
     val mail = InternetAddress(user.mail)
     mail.validate()
 
@@ -32,6 +35,7 @@ fun newManager(user: User)
 
 fun logUser(user: User)
 {
+    println("Logged user: ${user.mail}")
     if (mongoLog(user))
         return
     else
@@ -40,6 +44,7 @@ fun logUser(user: User)
 
 fun logManager(user: User) : List<com.polito.kotlin.RestTurism.Point>
 {
+    println("Logged Manager: ${user.mail}")
     if (mongoLogManager(user))
     {
         val list = mutableListOf<com.polito.kotlin.RestTurism.Point>()
@@ -55,6 +60,7 @@ fun logManager(user: User) : List<com.polito.kotlin.RestTurism.Point>
 
 fun matchPoints (lat : Double, lon: Double): List<PointOfInterest>
 {
+    println("Position received: $lat , $lon")
     var list = mutableListOf<PointOfInterest>()
 
     for (place: Place in mongoPos(Point(Position(lat, lon))))
@@ -108,14 +114,18 @@ fun matchLine(sLat: Double, sLon: Double, fLat: Double, fLon: Double): List<Poin
     return list
 }
 
-fun addPlace(mail:String, poi: PointOfInterest): com.polito.kotlin.RestTurism.Point
+fun addPlace(mail:String, poi: com.polito.kotlin.RestTurism.Point): com.polito.kotlin.RestTurism.Point
 {
-    var polygon = Polygon(listOf(Position(poi.lat+0.001, poi.lon+0.001),
-                                 Position(poi.lat+0.001, poi.lon-0.001),
-                                 Position(poi.lat-0.001, poi.lon-0.001),
-                                 Position(poi.lat-0.001, poi.lon+0.001),
-                                 Position(poi.lat+0.001, poi.lon+0.001)))
-    val place = Place(Point(Position(poi.lat, poi.lon)), poi.name, poi.description, polygon, mail, poi.image)
+    val file = Paths.get(poi.image)
+
+    var pol = mutableListOf<Position>()
+
+    for (elem: com.polito.kotlin.RestTurism.Position in poi.polygon)
+        pol.add(Position(elem.lat, elem.lon))
+
+    println("New place: ${poi}")
+
+    val place = Place(Point(Position(poi.position.lat, poi.position.lon)), poi.name, poi.description, Polygon(pol), mail, file.fileName.toString())
 
     val point = makePoint(place)
 
@@ -137,4 +147,12 @@ fun makePoint(place: Place) : com.polito.kotlin.RestTurism.Point
             place.description!!,
             area.toTypedArray(),
             place.image!!)
+}
+
+fun imageSave(name: String, image: ByteArray)
+{
+    var path = Paths.get(name)
+    var file = FileOutputStream(File("./images/${path.fileName}"))
+
+    file.write(image)
 }

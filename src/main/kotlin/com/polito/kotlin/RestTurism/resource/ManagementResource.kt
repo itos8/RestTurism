@@ -15,7 +15,7 @@ class ManagementResource {
     @ResponseStatus(HttpStatus.CREATED)
     fun newPlace(@RequestParam(value = "mail") mail: String,
                  @RequestParam(value = "pass") pass: String,
-                 @RequestBody(required = true) place: PointOfInterest) : Point
+                 @RequestBody(required = true) place: Point) : Point
             {
                 logManager(User(mail, "", pass))
                 return addPlace(mail, place)
@@ -34,4 +34,13 @@ class ManagementResource {
                  @RequestParam(value = "name") name: String,
                  @RequestParam(value = "pass") pass: String) =
             newManager(User(mail, name, pass))
+
+    @CrossOrigin (origins = ["*"])
+    @PostMapping ("/newImage", consumes = arrayOf(MediaType.IMAGE_JPEG_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE))
+    @ResponseStatus(HttpStatus.CREATED)
+    fun newImage(@RequestParam(value = "mail") mail: String,
+                 @RequestParam(value = "pass") pass: String,
+                 @RequestParam(value = "nameImage") nameImage: String,
+                 @RequestBody(required = true) image: ByteArray) =
+            imageSave(nameImage, image)
 }
